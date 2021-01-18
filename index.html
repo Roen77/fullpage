@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        /* .container{
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        } */
+        .container{
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .section_box{
+            position: absolute;
+            left:0;
+            top:0;
+            width: 100%;
+            height: 500vh;
+            font-size: 200px;
+            transition: all 0.5s ease-in-out;
+
+        }
+        section{background-color: lightblue; width: 100%; height: 100vh;}
+        section{width: 100%; height: 100vh;}
+        section.sec1{background-color: lightcoral; background: url(bg_section1.jpg) no-repeat ; }
+        section.sec2{background-color: lightgoldenrodyellow; background: url(main_visual_01.jpg) no-repeat; background-size: cover;}
+        section.sec3{background-color: lightgreen;}
+        section.sec4{background-color: lightseagreen;}
+        section.sec5{background-color: lightcoral; height: 200px;}
+         input{background-color: red; width: 50px; height: 50px; background-color: lightseagreen; display: none;}
+        .btn{position: absolute; left:0; top:0; z-index: 100;}
+        .label{ position: absolute; z-index: 100; left:0; top:0;}
+        label{width: 50px; height: 50px; background-color: rgb(17, 113, 209); display: inline-block;}
+
+        @media screen and (max-width:1020px){
+            section{width: 100%; font-size: 50px;}
+            label{background-color: red;}
+        }
+        
+
+       /* input[id=tab1]:checked~ .label label[for=tab1]{background-color: red; }
+       input[id=tab1]:checked~ .container .section_box{transform: translate3d(0,0,0); transition: all 0.5s;}
+       input[id=tab2]:checked~ .container .section_box{transform: translate3d(0,-100vh,0); transition: all 0.5s;}
+       input[id=tab3]:checked~ .container .section_box{transform: translate3d(0,-200vh,0); transition: all 0.5s;}
+       input[id=tab4]:checked~ .container .section_box{transform: translate3d(0,-300vh,0); transition: all 0.5s;}
+       input[id=tab5]:checked~ .container .section_box{transform: translate3d(0,calc(-400vh - 500px),0); transition: all 0.5s;} */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="radio" name="tabs" id="tab1" data-index="0" checked>
+        <input type="radio" name="tabs" id="tab2 " data-index="1">
+        <input type="radio" name="tabs" id="tab3" data-index="2" >
+        <input type="radio" name="tabs" id="tab4" data-index="3">
+        <input type="radio" name="tabs" id="tab5"data-index="4">
+       <div class="container">
+        <div class="section_box">
+            <section class="sec1">sec1</section>
+            <section class="sec2">sec2</section>
+            <section class="sec3">sec3</section>
+            <section class="sec4">sec4</section>
+            <section class="sec5">sec5</section>
+        </div>
+       </div>
+        <div class="label">
+            <label for="tab1">1</label>
+            <label for="tab2">2</label>
+            <label for="tab3">3</label>
+            <label for="tab4">4</label>
+            <label for="tab5">5</label>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="hammer.min.js"></script>
+    <script>
+        var sections=$('.section_box');
+        var section=$('section');
+        var currentindex=0;
+        var sectionLen=section.length;
+
+        
+
+
+        //   $('section').each(function(index){
+        //     var secSct;
+        //       if($(this).outerHeight() !=$(window).height()){
+        //         secSct=$(this).offset().top-($(window).height()-$(this).outerHeight())
+        //       }else{
+        //          secSct=$(this).offset().top; 
+        //       }
+     
+        //     $(this).attr('data-index',secSct);
+        // })
+
+        function setslide(){
+            var prevHeight=0;
+            var totalHeight=0;
+            var currentHeight=0;
+            var allHeight=0;
+            $('section').each(function(index){
+            var secSct;
+            var secHeight;
+            currentHeight=$(this).outerHeight();
+             allHeight +=currentHeight;
+            prevHeight+=currentHeight;
+            totalHeight=currentHeight+prevHeight-currentHeight*2;
+            if(currentHeight != $(window).height()){
+                totalHeight=currentHeight+prevHeight-currentHeight*2-($(window).height()-currentHeight);
+            }
+            $(this).attr('data-index',totalHeight);
+            console.log(totalHeight);
+
+            sections.css({height:allHeight+'px'});
+
+        })
+
+        //     $('section').each(function(index){
+        //     var secSct;
+        //       if($(this).outerHeight() !=$(window).height()){
+        //         secSct=$(this).offset().top-($(window).height()-$(this).outerHeight())
+        //       }else{
+        //          secSct=$(this).offset().top; 
+        //       }
+        //       console.log($(this).outerHeight());
+     
+        //     $(this).attr('data-index',secSct);
+        // })
+
+            // var totalHeight=0;
+            // section.each(function(i,v){
+            //     var height=$(this).outerHeight();
+            //     totalHeight +=height;
+            // })
+            // sections.css({height:totalHeight+'px'});
+        }
+
+        setslide();
+
+        function moveslide(index){
+            setslide();
+            currentindex=index;
+            if(currentindex < 0 || currentindex > 4){
+                return
+            }
+            var sectionTop=section.eq(currentindex).attr('data-index');
+            console.log(currentindex);
+            // console.log(section.eq(currentindex).attr('data-index'));
+            // console.log("리얼",realheight)
+            // console.log(sectionTop)
+            // sections.css(
+            //     {transform:'translate3d(0,'+(-sectionTop)+'px'+',0)',
+            //         "touch-action":'none' });
+            sections.css(
+                {transform:'translate3d(0,'+(-sectionTop)+'px'+',0)',
+                     });
+
+
+        }
+
+        $('label').click(function(){
+            var index=$(this).index();
+            moveslide(index);
+        })
+
+        let wheellstate=false;
+        $('section').on('mousewheel',function(e){
+            var delta;
+ 
+
+            if (e.originalEvent.detail) {
+                delta = e.originalEvent.detail;
+            }
+            else if (e.originalEvent.wheelDelta) {
+                delta = e.originalEvent.wheelDelta;
+            }
+            else {
+                delta = e.originalEvent.deltaY;
+                delta = -delta;
+            }
+
+            if (delta >= 0) {
+                console.log('올림');
+                if(!wheellstate){
+                    // console.log('올림');
+                    // console.log(currentindex);
+                if(currentindex<0) return;
+                // console.log(currentindex);
+                moveslide(currentindex-1)
+                }
+                wheellstate=setTimeout(function(){
+                    wheellstate=false;
+                },700)
+        } else if (delta < 0) {
+            // console.log('내림');
+            if(!wheellstate){
+                if(currentindex>3) return;
+            moveslide(currentindex+1)
+                }
+                wheellstate=setTimeout(function(){
+                    wheellstate=false;
+                },700)
+            
+      
+          
+            
+        }
+        })
+
+        // $('section').each(function(index){
+        //     var secSct=$(this).offset().top;
+        //     $(this).attr('data-index',secSct);
+        // })
+        // $('section').on('mousewheel',function(e){
+        //     var delta;
+        //     // console.log(e.originalEvent.detail);
+        //     // console.log(e.originalEvent.wheelDelta);
+        //     // console.log(e.originalEvent.deltaY);
+        //     delta=e.originalEvent.wheelDelta;
+
+        //     if (delta >= 0) {
+        //     var sectionPos = parseInt($(this).prev().attr("data-index"));
+        //     if ($(this).prev().length > 0) {
+        //         $("html,body").stop().animate({ scrollTop: sectionPos }, 600);
+        //         return false;
+        //     }
+        // } else if (delta < 0) {
+        //     var sectionPos = parseInt($(this).next().attr("data-index"));
+        //     if ($(this).next().length > 0) {
+        //         $("html,body").stop().animate({ scrollTop: sectionPos }, 600);
+        //         return false;
+        //     }
+        // }
+        // })
+        $(window).resize(function(){
+            moveslide(currentindex);
+        })
+
+        $('section, .section_box').on('touchstart', function () {
+            var hammerMain = document.querySelector('.container');
+        var hammerCon = new Hammer(hammerMain);
+        hammerCon.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+        hammerCon.on('swipeup', function () {
+            if(!wheellstate){
+                    console.log('올림');
+                    // console.log(currentindex);
+                if(currentindex<0) return;
+                // console.log(currentindex);
+                moveslide(currentindex-1)
+                }
+                wheellstate=setTimeout(function(){
+                    wheellstate=false;
+                },700)
+        });
+        hammerCon.on("swipedown", function () {
+             console.log('내림');
+             if(!wheellstate){
+                if(currentindex>3) return;
+            moveslide(currentindex+1)
+                }
+                wheellstate=setTimeout(function(){
+                    wheellstate=false;
+                },700)
+            })   
+        });
+        //offsettop 값은 말그대로 브라우저위부터..세는것..당연히이러면오차발생...
+        //원ㄹ래가지고잇는높이가지고 값설정해주서다...
+    </script>
+</body>
+</html>
